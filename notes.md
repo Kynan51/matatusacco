@@ -14,3 +14,5 @@ posting on github[
     5. git push -u origin master
 
 ]
+
+make sure there is a 404 page
