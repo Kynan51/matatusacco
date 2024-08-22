@@ -17,17 +17,38 @@ app.get("/", (req,res)=>{
 app.get("/Vehicles", (req,res)=>{
     // all vehicles route
     
-    dbconnection.query("SELECT * FROM vehicles", (sqlErr, vehicles)=>{
+    dbconnection.query("SELECT * FROM vehicles JOIN owners ON vehicles.OwnerID = owners.ID_NO", (sqlErr, vehicles)=>{
         if(sqlErr){
             res.send("Server Error!!")
         }else{
-            console.log(vehicles);
-            res.render("vehicles.ejs")
+            // console.log(vehicles);
+            res.render("vehicles.ejs", {vehicles})
         }
     })
    
 });
 
+app.get("/vehicle",(req,res)=>{
+    // individual vehicle route
+    console.log(req.query.plate);
+    if(!req.query.plate){
+        res.render("vehicle.ejs", {message: "No vehicle selected"})
+    }else{
+        dbconnection.query(`SELECT * FROM vehicles WHERE NumberPlate = "${req.query.plate}"`, (sqlErr, vehicle)=>{
+            if(sqlErr){
+                res.status(500).send("Server Error!!")
+            }else{
+                console.log(vehicle);
+                if(vehicle.length > 0){
+                    res.render("vehicle.ejs", {vehicle: vehicle[0]})
+                }else{
+                    res.render("vehicle.ejs", {message: "No vehicle found / invalid vehicle plate"})
+                }
+               
+            }
+        })
+    }
+})
 
 
 

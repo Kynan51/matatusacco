@@ -16,3 +16,7 @@ posting on github[
 ]
 
 make sure there is a 404 page
+
+connect your index.js to your database
+now write the code in your ejs file that ensures your data in a table is displayed on your page
+now 
