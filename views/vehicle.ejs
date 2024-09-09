@@ -2,29 +2,64 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">      
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vehicle Details</title>
-    <link rel="stylesheet" href="main.css" />
+    <link rel="stylesheet" href="main.css">
 </head>
 <body>
-    <%- include ("_header.ejs") %>
+    <%- include("_header.ejs") %>
     <main>
         <% if(locals.message){ %>
             <h1><%= message %></h1>
-        <% }else{ %>    
-        <section class="info">
-            <h1><%= vehicle.NumberPlate %></h1>
-            <p>Model: <%= vehicle.Model %></p>
-            <p>Driver: <a href="/driver?id=<%vehicle.ID_NO %>"><%= vehicle.FullName %></a></p>
-            <p>Phone: <a href="tel:<%= vehicle.phone %>"><%= vehicle.phone %></a></p>
-            <a href="/newtrip" class="new-trip">New Trip</a>
-        </section>
-        <section class="trip">
-            <h2>All Trips</h2>
-            <p>table</p>
-        </section>
-        <%}%>
+        <%} else{ %>
+            <section class="info">
+        
+                <h1> <%= vehicle.NumberPlate %> </h1>
+
+                <p> Model: <%= vehicle.Model %> </p>
+
+                <p> Driver: <a href="/driver?id=<%vehicle.ID_NO%> "><%= vehicle.FullName %></a> </p>
+
+                <p> Phone: <a href="tel:<%=vehicle.phone%>"><%= vehicle.phone %></a> </p>
+
+                <a href="/newtrip" class="new-trip">New Trip</a>
+            </section>
+
+            <section class="trips">
+                <h2>All trips</h2>
+                    <table>
+                        <tr>
+                            <th>Route</th>
+                            <th>Distance</th>
+                            <th>Amount Recieved</th>
+                            <th>Departure</th>
+                            <th>Trip Status</th>
+                            <th>Actions</th>
+                        </tr>
+                        <% trips.forEach(trip=>{ %>
+                            <tr>
+                                <td> <%= trip.Label %> </td>
+                                <td> <%= trip.DistanceKM %> </td>
+                                <td> <%= trip.PricePerPassenger * vehicle.capacity %> </td>
+                                <td> <%= trip.Departure %> </td>
+                                <td> <%= trip.TripStatus %> </td>  
+                                <td>
+                                    <% if(trip.TripStatus == "Scheduled"){ %>
+                                        <a href="/updatetrip?value=Ongoing&plate=<%=vehicle.NumberPlate%>&trip=<%= trip.trip_id %>">Start</a>
+                                        <a href="/updatetrip?value=Cancelled&plate=<%=vehicle.NumberPlate%>&trip=<%=trip.trip_id%>">Cancel</a>
+                                    <%}else if(trip.TripStatus == "Ongoing"){ %>
+                                        <a href="/updatetrip?value=Completed&plate=<%=vehicle.NumberPlate%>&trip=<%=trip.trip_id%>">Complete</a>
+                                    <%}else{%>
+                                        No action
+                                    <%}%>
+                                 </td>                              
+                            </tr>
+                        <% }) %>
+                    </table>
+
+
+            </section>
+        <% } %>
     </main>
 </body>
 </html>
